@@ -70,3 +70,41 @@ print(colSums(is.na(data)))
 
 cat("\nProcessed missing values:\n")
 print(colSums(is.na(processed_data))) 
+
+library(ggplot2)
+library(reshape2)
+
+# Select only numeric columns for calculating means
+numeric_cols <- sapply(data, is.numeric)
+numeric_col_names <- names(data)[numeric_cols]
+
+# Calculate column means for only numeric columns
+original_means <- sapply(numeric_col_names, function(col) mean(data[[col]], na.rm = TRUE))
+processed_means <- sapply(numeric_col_names, function(col) mean(processed_data[[col]], na.rm = TRUE))
+
+# Create data frame for plotting
+plot_data <- data.frame(
+  ColumnName = numeric_col_names,
+  Original = original_means,
+  Processed = processed_means
+)
+
+# Create a bar chart with simple approach
+plot_data_melted <- melt(plot_data, id.vars = "ColumnName",
+                          variable.name = "Data_Type", 
+                          value.name = "Mean_Value")
+
+# Create a bar chart comparing means
+comparison_plot <- ggplot(plot_data_melted, aes(x = ColumnName, y = Mean_Value, fill = Data_Type)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Comparison of Mean Values Before and After Processing",
+       x = "Column",
+       y = "Mean Value",
+       fill = "Data Type") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Save plot
+ggsave("comparison_plot.png", comparison_plot, width = 10, height = 6)
+
+cat("\nVisualization created: comparison_plot.png\n")
