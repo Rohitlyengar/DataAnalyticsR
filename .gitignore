@@ -1,0 +1,15 @@
+# Data files
+*.csv
+
+# R specific files
+.RData
+.Rhistory
+.Rproj.user/
+.Ruserdata
+
+# RStudio files
+.Rproj
+
+# OS specific files
+.DS_Store
+Thumbs.db 
